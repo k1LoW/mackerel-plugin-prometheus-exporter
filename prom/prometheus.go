@@ -48,71 +48,80 @@ func NewPrometheusPlugin(ctx context.Context, targets []string, prefix string) (
 	}
 
 	mutex := new(sync.Mutex)
+	wg := &sync.WaitGroup{}
+	errChan := make(chan error, len(targets)) // TODO: output log
 
 	for _, t := range targets {
-		var buf = new(bytes.Buffer)
-		_, err := p.scrape(ctx, t, buf)
-		if err != nil {
-			return p, err
-		}
-
-		parser := textparse.NewPromParser(buf.Bytes())
-
-		var res labels.Labels
-
-		for {
-			et, err := parser.Next()
+		wg.Add(1)
+		go func(t string) {
+			var buf = new(bytes.Buffer)
+			_, err := p.scrape(ctx, t, buf)
 			if err != nil {
-				if err == io.EOF {
-					break
-				}
-				return p, err
+				errChan <- err
+				return
 			}
 
-			switch et {
-			case textparse.EntrySeries:
-				_, _, v := parser.Series()
-				parser.Metric(&res)
-				key := res.Get(labels.MetricName)
+			parser := textparse.NewPromParser(buf.Bytes())
 
-				b := labels.NewBuilder(res)
-				b.Del(labels.MetricName)
+			var res labels.Labels
 
-				mutex.Lock()
-				g, ok := p.graphs[key]
-				if !ok {
-					g = mp.Graphs{
-						Label:   fmt.Sprintf("%s.%s", p.MetricKeyPrefix(), key),
-						Unit:    mp.UnitFloat,
-						Metrics: []mp.Metrics{},
+			for {
+				et, err := parser.Next()
+				if err != nil {
+					if err == io.EOF {
+						break
 					}
+					errChan <- err
+					return
 				}
-				name := denyRe.ReplaceAllString(fmt.Sprintf("%s-%s", key, b.Labels().String()), "")
-				label := b.Labels().String()
-				g.Metrics = append(g.Metrics, mp.Metrics{
-					Name:    name,
-					Label:   label,
-					Diff:    false,
-					Stacked: false,
-				})
-				p.graphs[key] = g
-				p.metrics[name] = v
-				mutex.Unlock()
-				res = res[:0]
 
-			case textparse.EntryType:
-				// m, typ := parser.Type()
-				// fmt.Printf("%v, %v\n", m, typ)
+				switch et {
+				case textparse.EntrySeries:
+					_, _, v := parser.Series()
+					parser.Metric(&res)
+					key := res.Get(labels.MetricName)
 
-			case textparse.EntryHelp:
-				// m, h := parser.Help()
-				// fmt.Printf("%v, %v\n", m, h)
+					b := labels.NewBuilder(res)
+					b.Del(labels.MetricName)
 
-			case textparse.EntryComment:
-				// fmt.Printf("%v\n", string(parser.Comment()))
+					mutex.Lock()
+					g, ok := p.graphs[key]
+					if !ok {
+						g = mp.Graphs{
+							Label:   fmt.Sprintf("%s.%s", p.MetricKeyPrefix(), key),
+							Unit:    mp.UnitFloat,
+							Metrics: []mp.Metrics{},
+						}
+					}
+					name := denyRe.ReplaceAllString(fmt.Sprintf("%s-%s", key, b.Labels().String()), "")
+					label := b.Labels().String()
+					g.Metrics = append(g.Metrics, mp.Metrics{
+						Name:    name,
+						Label:   label,
+						Diff:    false,
+						Stacked: false,
+					})
+					p.graphs[key] = g
+					p.metrics[name] = v
+					mutex.Unlock()
+					res = res[:0]
+
+				case textparse.EntryType:
+					// m, typ := parser.Type()
+					// fmt.Printf("%v, %v\n", m, typ)
+
+				case textparse.EntryHelp:
+					// m, h := parser.Help()
+					// fmt.Printf("%v, %v\n", m, h)
+
+				case textparse.EntryComment:
+					// fmt.Printf("%v\n", string(parser.Comment()))
+				}
 			}
-		}
+			wg.Done()
+		}(t)
 	}
+	wg.Wait()
 
 	return p, nil
 }
