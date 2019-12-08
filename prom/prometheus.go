@@ -23,7 +23,7 @@ import (
 
 const DefaultPrefix = "prom"
 
-var replaceRe = regexp.MustCompile(`[\s{},\/"=]`)
+var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]`)
 
 type PrometheusPlugin struct {
 	prefix  string
@@ -87,7 +87,7 @@ func NewPrometheusPlugin(ctx context.Context, targets []string, prefix string) (
 						Metrics: []mp.Metrics{},
 					}
 				}
-				name := replaceRe.ReplaceAllString(fmt.Sprintf("%s-%s", key, b.Labels().String()), "")
+				name := denyRe.ReplaceAllString(fmt.Sprintf("%s-%s", key, b.Labels().String()), "")
 				label := b.Labels().String()
 				g.Metrics = append(g.Metrics, mp.Metrics{
 					Name:    name,
