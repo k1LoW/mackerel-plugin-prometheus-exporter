@@ -1,0 +1,5 @@
+.go-version
+dist/
+coverage.txt
+*.debug
+mackerel-plugin-prometheus

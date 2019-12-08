@@ -22,49 +22,48 @@ THE SOFTWARE.
 package cmd
 
 import (
-  "fmt"
-  "os"
-  "github.com/spf13/cobra"
+	"context"
+	"fmt"
+	"os"
 
+	"github.com/k1LoW/mackerel-plugin-prometheus/prom"
+	mp "github.com/mackerelio/go-mackerel-plugin"
+	"github.com/spf13/cobra"
 )
 
+var (
+	targets  []string
+	prefix   string
+	tempfile string
+)
 
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-  Use:   "mackerel-plugin-prometheus",
-  Short: "A brief description of your application",
-  Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "mackerel-plugin-prometheus",
+	Short: "mackerel-plugin-prometheus",
+	Long:  `mackerel-plugin-prometheus.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		ctx := context.Background()
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-  // Uncomment the following line if your bare application
-  // has an action associated with it:
-  //	Run: func(cmd *cobra.Command, args []string) { },
+		p, err := prom.NewPrometheusPlugin(ctx, targets, prefix)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		plugin := mp.NewMackerelPlugin(p)
+		plugin.Tempfile = tempfile
+		plugin.Run()
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-  if err := rootCmd.Execute(); err != nil {
-    fmt.Println(err)
-    os.Exit(1)
-  }
+	if err := rootCmd.Execute(); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
 }
 
 func init() {
-  // Here you will define your flags and configuration settings.
-  // Cobra supports persistent flags, which, if defined here,
-  // will be global for your application.
-
-  // rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.mackerel-plugin-prometheus.yaml)")
-
-
-  // Cobra also supports local flags, which will only run
-  // when this action is called directly.
-  rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Target of Prometheus")
+	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prom.DefaultPrefix, "Metric key prefix")
+	rootCmd.Flags().StringVarP(&tempfile, "tempfile", "", "", "Temp file name")
 }
-
-
