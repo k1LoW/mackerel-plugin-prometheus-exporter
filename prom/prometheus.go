@@ -34,7 +34,7 @@ type PrometheusPlugin struct {
 }
 
 // NewPrometheusPlugin returns PrometheusPlugin
-func NewPrometheusPlugin(ctx context.Context, targets []string, prefix string) (PrometheusPlugin, error) {
+func NewPrometheusPlugin(ctx context.Context, targets []string, prefix, exclude string) (PrometheusPlugin, error) {
 	if prefix == "" {
 		prefix = DefaultPrefix
 	}
@@ -47,6 +47,7 @@ func NewPrometheusPlugin(ctx context.Context, targets []string, prefix string) (
 		client:  newClient(),
 	}
 
+	excludeRe := regexp.MustCompile(exclude)
 	mutex := new(sync.Mutex)
 	wg := &sync.WaitGroup{}
 	errChan := make(chan error, len(targets)) // TODO: output log
@@ -80,6 +81,11 @@ func NewPrometheusPlugin(ctx context.Context, targets []string, prefix string) (
 					_, _, v := parser.Series()
 					parser.Metric(&res)
 					key := res.Get(labels.MetricName)
+
+					if exclude != "" && excludeRe.MatchString(key) {
+						res = res[:0]
+						continue
+					}
 
 					b := labels.NewBuilder(res)
 					b.Del(labels.MetricName)

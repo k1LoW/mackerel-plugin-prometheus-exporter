@@ -34,17 +34,18 @@ import (
 var (
 	targets  []string
 	prefix   string
+	exclude  string
 	tempfile string
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "mackerel-plugin-prometheus",
-	Short: "mackerel-plugin-prometheus",
-	Long:  `mackerel-plugin-prometheus.`,
+	Short: "Mackerel plugin for reading Prometheus exporter metrics",
+	Long:  `Mackerel plugin for reading Prometheus exporter metrics.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
-		p, err := prom.NewPrometheusPlugin(ctx, targets, prefix)
+		p, err := prom.NewPrometheusPlugin(ctx, targets, prefix, exclude)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
@@ -63,7 +64,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Target of Prometheus")
+	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Prometheus exporter endpoint")
 	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prom.DefaultPrefix, "Metric key prefix")
+	rootCmd.Flags().StringVarP(&exclude, "exclude", "", "", "Exclude metrics regexp")
 	rootCmd.Flags().StringVarP(&tempfile, "tempfile", "", "", "Temp file name")
 }
