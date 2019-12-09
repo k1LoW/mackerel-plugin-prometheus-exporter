@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/k1LoW/mackerel-plugin-prometheus/prom"
+	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/prom"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +39,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "mackerel-plugin-prometheus",
+	Use:   "mackerel-plugin-prometheus-exporter",
 	Short: "Mackerel plugin for reading Prometheus exporter metrics",
 	Long:  `Mackerel plugin for reading Prometheus exporter metrics.`,
 	Run: func(cmd *cobra.Command, args []string) {

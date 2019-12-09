@@ -2,4 +2,4 @@
 dist/
 coverage.txt
 *.debug
-mackerel-plugin-prometheus
+mackerel-plugin-prometheus-exporter

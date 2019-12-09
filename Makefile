@@ -1,4 +1,4 @@
-PKG = github.com/k1LoW/mackerel-plugin-prometheus
+PKG = github.com/k1LoW/mackerel-plugin-prometheus-exporter
 COMMIT = $$(git describe --tags --always)
 OSNAME=${shell uname -s}
 ifeq ($(OSNAME),Darwin)

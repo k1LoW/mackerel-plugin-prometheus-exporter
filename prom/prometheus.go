@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/k1LoW/mackerel-plugin-prometheus/version"
+	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/version"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/pkg/errors"
 	"github.com/prometheus/prometheus/pkg/labels"
@@ -146,7 +146,7 @@ func (p PrometheusPlugin) MetricKeyPrefix() string {
 
 const acceptHeader = `application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1`
 
-var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus/%s", version.Version)
+var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus-exporter/%s", version.Version)
 var timeout = time.Duration(10 * time.Second)
 
 func newClient() *http.Client {

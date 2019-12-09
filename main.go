@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/k1LoW/mackerel-plugin-prometheus/cmd"
+import "github.com/k1LoW/mackerel-plugin-prometheus-exporter/cmd"
 
 func main() {
   cmd.Execute()

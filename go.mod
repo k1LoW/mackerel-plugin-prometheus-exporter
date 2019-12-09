@@ -1,4 +1,4 @@
-module github.com/k1LoW/mackerel-plugin-prometheus
+module github.com/k1LoW/mackerel-plugin-prometheus-exporter
 
 go 1.13
 
