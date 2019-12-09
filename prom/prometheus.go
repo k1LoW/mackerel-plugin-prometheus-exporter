@@ -25,7 +25,7 @@ const DefaultPrefix = "prom"
 
 var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]`)
 
-type PrometheusPlugin struct {
+type Plugin struct {
 	prefix  string
 	targets []string
 	graphs  map[string]mp.Graphs
@@ -33,13 +33,13 @@ type PrometheusPlugin struct {
 	client  *http.Client
 }
 
-// NewPrometheusPlugin returns PrometheusPlugin
-func NewPrometheusPlugin(ctx context.Context, targets []string, prefix, exclude string) (PrometheusPlugin, error) {
+// NewPlugin returns Plugin
+func NewPlugin(ctx context.Context, targets []string, prefix, exclude string) (Plugin, error) {
 	if prefix == "" {
 		prefix = DefaultPrefix
 	}
 
-	p := PrometheusPlugin{
+	p := Plugin{
 		targets: targets,
 		graphs:  map[string]mp.Graphs{},
 		metrics: map[string]float64{},
@@ -132,15 +132,15 @@ func NewPrometheusPlugin(ctx context.Context, targets []string, prefix, exclude 
 	return p, nil
 }
 
-func (p PrometheusPlugin) GraphDefinition() map[string]mp.Graphs {
+func (p Plugin) GraphDefinition() map[string]mp.Graphs {
 	return p.graphs
 }
 
-func (p PrometheusPlugin) FetchMetrics() (map[string]float64, error) {
+func (p Plugin) FetchMetrics() (map[string]float64, error) {
 	return p.metrics, nil
 }
 
-func (p PrometheusPlugin) MetricKeyPrefix() string {
+func (p Plugin) MetricKeyPrefix() string {
 	return p.prefix
 }
 
@@ -153,7 +153,7 @@ func newClient() *http.Client {
 	return &http.Client{}
 }
 
-func (p PrometheusPlugin) scrape(ctx context.Context, url string, w io.Writer) (string, error) {
+func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err
