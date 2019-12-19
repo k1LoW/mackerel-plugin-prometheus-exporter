@@ -34,7 +34,7 @@ type Plugin struct {
 }
 
 // NewPlugin returns Plugin
-func NewPlugin(ctx context.Context, targets []string, prefix string, excludes []string) (Plugin, error) {
+func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefix string, excludes []string) (Plugin, error) {
 	if prefix == "" {
 		prefix = DefaultPrefix
 	}
@@ -44,7 +44,7 @@ func NewPlugin(ctx context.Context, targets []string, prefix string, excludes []
 		graphs:  map[string]mp.Graphs{},
 		metrics: map[string]float64{},
 		prefix:  prefix,
-		client:  newClient(),
+		client:  client,
 	}
 
 	eRegexps := []*regexp.Regexp{}
@@ -156,7 +156,7 @@ const acceptHeader = `application/openmetrics-text; version=0.0.1,text/plain;ver
 var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus-exporter/%s", version.Version)
 var timeout = time.Duration(10 * time.Second)
 
-func newClient() *http.Client {
+func NewHttpClient() *http.Client {
 	return &http.Client{}
 }
 
