@@ -1,4 +1,3 @@
-// Reference: https://github.com/prometheus/prometheus/blob/master/scrape/scrape.go
 package prom
 
 import (
@@ -155,10 +154,11 @@ const acceptHeader = `application/openmetrics-text; version=0.0.1,text/plain;ver
 var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus-exporter/%s", version.Version)
 var timeout = time.Duration(10 * time.Second)
 
-func NewHttpClient() *http.Client {
+func NewHTTPClient() *http.Client {
 	return &http.Client{}
 }
 
+// Reference: https://github.com/prometheus/prometheus/blob/master/scrape/scrape.go
 func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

@@ -45,7 +45,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
-		p, err := prom.NewPlugin(ctx, prom.NewHttpClient(), targets, prefix, excludes)
+		p, err := prom.NewPlugin(ctx, prom.NewHTTPClient(), targets, prefix, excludes)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
