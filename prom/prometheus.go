@@ -34,7 +34,7 @@ type Plugin struct {
 }
 
 // NewPlugin returns Plugin
-func NewPlugin(ctx context.Context, targets []string, prefix, exclude string) (Plugin, error) {
+func NewPlugin(ctx context.Context, targets []string, prefix string, excludes []string) (Plugin, error) {
 	if prefix == "" {
 		prefix = DefaultPrefix
 	}
@@ -47,7 +47,11 @@ func NewPlugin(ctx context.Context, targets []string, prefix, exclude string) (P
 		client:  newClient(),
 	}
 
-	excludeRe := regexp.MustCompile(exclude)
+	eRegexps := []*regexp.Regexp{}
+	for _, e := range excludes {
+		eRegexps = append(eRegexps, regexp.MustCompile(e))
+	}
+
 	mutex := new(sync.Mutex)
 	wg := &sync.WaitGroup{}
 	errChan := make(chan error, len(targets)) // TODO: output log
@@ -65,7 +69,7 @@ func NewPlugin(ctx context.Context, targets []string, prefix, exclude string) (P
 			parser := textparse.NewPromParser(buf.Bytes())
 
 			var res labels.Labels
-
+		L:
 			for {
 				et, err := parser.Next()
 				if err != nil {
@@ -82,11 +86,14 @@ func NewPlugin(ctx context.Context, targets []string, prefix, exclude string) (P
 					parser.Metric(&res)
 					key := res.Get(labels.MetricName)
 
-					if exclude != "" && excludeRe.MatchString(key) {
-						res = res[:0]
-						continue
+					if len(eRegexps) > 0 {
+						for _, re := range eRegexps {
+							if re.MatchString(key) {
+								res = res[:0]
+								continue L
+							}
+						}
 					}
-
 					b := labels.NewBuilder(res)
 					b.Del(labels.MetricName)
 

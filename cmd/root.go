@@ -34,7 +34,7 @@ import (
 var (
 	targets  []string
 	prefix   string
-	exclude  string
+	excludes []string
 	tempfile string
 )
 
@@ -45,7 +45,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
-		p, err := prom.NewPlugin(ctx, targets, prefix, exclude)
+		p, err := prom.NewPlugin(ctx, targets, prefix, excludes)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
@@ -66,6 +66,6 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Prometheus exporter endpoint")
 	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prom.DefaultPrefix, "Metric key prefix")
-	rootCmd.Flags().StringVarP(&exclude, "exclude", "", "", "Exclude metrics regexp")
+	rootCmd.Flags().StringArrayVarP(&excludes, "exclude", "", []string{}, "Exclude metrics regexp")
 	rootCmd.Flags().StringVarP(&tempfile, "tempfile", "", "", "Temp file name")
 }
