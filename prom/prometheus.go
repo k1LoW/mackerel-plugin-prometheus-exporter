@@ -59,6 +59,7 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 	for _, t := range targets {
 		wg.Add(1)
 		go func(t string) {
+			defer wg.Done()
 			var buf = new(bytes.Buffer)
 			_, err := p.scrape(ctx, t, buf)
 			if err != nil {
@@ -79,7 +80,6 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 					errChan <- err
 					return
 				}
-
 				switch et {
 				case textparse.EntrySeries:
 					_, _, v := parser.Series()
@@ -131,7 +131,6 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 					// fmt.Printf("%v\n", string(parser.Comment()))
 				}
 			}
-			wg.Done()
 		}(t)
 	}
 	wg.Wait()
