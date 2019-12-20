@@ -175,7 +175,7 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 	}
 	defer func() {
 		_, _ = io.Copy(ioutil.Discard, resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 	}()
 
 	if resp.StatusCode != http.StatusOK {
@@ -197,7 +197,7 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 	}
 
 	_, err = io.Copy(w, gzipr)
-	gzipr.Close()
+	_ = gzipr.Close()
 	if err != nil {
 		return "", err
 	}
