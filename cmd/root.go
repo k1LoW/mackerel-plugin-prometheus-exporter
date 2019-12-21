@@ -66,6 +66,6 @@ func Execute() {
 func init() {
 	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Prometheus exporter endpoint")
 	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prom.DefaultPrefix, "Metric key prefix")
-	rootCmd.Flags().StringArrayVarP(&excludes, "exclude", "", []string{}, "Exclude metrics regexp")
+	rootCmd.Flags().StringArrayVarP(&excludes, "exclude", "e", []string{}, "Exclude metrics regexp")
 	rootCmd.Flags().StringVarP(&tempfile, "tempfile", "", "", "Temp file name")
 }

@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -22,7 +23,7 @@ import (
 
 const DefaultPrefix = "prom"
 
-var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]`)
+var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]+`)
 
 type Plugin struct {
 	prefix  string
@@ -105,8 +106,17 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 							Metrics: []mp.Metrics{},
 						}
 					}
-					name := denyRe.ReplaceAllString(fmt.Sprintf("%s-%s", key, b.Labels().String()), "")
+					var name string
 					label := b.Labels().String()
+					if len(b.Labels()) == 0 {
+						k := strings.Trim(denyRe.ReplaceAllString(key, "_"), "_")
+						name = k
+					} else {
+						l := strings.Trim(denyRe.ReplaceAllString(label, "_"), "_")
+						k := strings.Trim(denyRe.ReplaceAllString(key, "_"), "_")
+						name = strings.Join([]string{k, l}, "-")
+					}
+
 					g.Metrics = append(g.Metrics, mp.Metrics{
 						Name:    name,
 						Label:   label,
