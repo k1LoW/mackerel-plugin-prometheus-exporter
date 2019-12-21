@@ -37,15 +37,3 @@ snapshot:
   name_template: "{{ .Version }}-next"
 changelog:
   skip: true
-brews:
--
-  name: mackerel-plugin-prometheus-exporter
-  github:
-    owner: k1LoW
-    name: homebrew-tap
-  commit_author:
-    name: k1LoW
-    email: k1lowxb@gmail.com
-  homepage: https://github.com/k1LoW/mackerel-plugin-prometheus-exporter
-  description: 'Mackerel plugin for reading Prometheus exporter metrics.'
-  install: bin.install 'mackerel-plugin-prometheus-exporter'
