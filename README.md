@@ -56,6 +56,12 @@ prom.node_memory_compressed_bytes.node_memory_compressed_bytes	1154330624	157690
 prom.node_memory_wired_bytes.node_memory_wired_bytes	2934050816	1576905934
 ```
 
+## TODO
+
+- [ ] Support config.yml ( `-c, --config` )
+- [ ] `--target` endpoint query string ( like `--target=http://:9100/metrics?role=app&hostname=app-1.internal`) to label
+- [ ] Default http.Client setting
+
 ## Alternatives
 
 - [mackerel-plugin-prometheus-query](https://github.com/fujiwara/mackerel-plugin-prometheus-query): Prometheus query plugin for Mackerel.
