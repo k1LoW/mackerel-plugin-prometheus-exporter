@@ -34,7 +34,6 @@ import (
 var (
 	targets  []string
 	prefix   string
-	excludes []string
 	tempfile string
 )
 
