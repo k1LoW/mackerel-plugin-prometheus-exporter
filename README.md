@@ -55,3 +55,7 @@ prom.node_load15.node_load15	1.877441	1576905934
 prom.node_memory_compressed_bytes.node_memory_compressed_bytes	1154330624	1576905934
 prom.node_memory_wired_bytes.node_memory_wired_bytes	2934050816	1576905934
 ```
+
+## Alternatives
+
+- [mackerel-plugin-prometheus-query](https://github.com/fujiwara/mackerel-plugin-prometheus-query): Prometheus query plugin for Mackerel.
