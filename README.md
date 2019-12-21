@@ -23,7 +23,7 @@ Flags:
 ## Example
 
 ``` console
-$ mackerel-plugin-prometheus-exporter --target=http://:9100/metrics # scrape node_exporter
+$ mackerel-plugin-prometheus-exporter --target=http://:9100/metrics --target=http://:9197/metrics --target=... # scrape exporter
 [...]
 prom.node_filesystem_size_bytes.node_filesystem_size_bytes-device_dev_disk1s1_fstype_apfs_mountpoint	499963174912	1576905934
 prom.node_filesystem_size_bytes.node_filesystem_size_bytes-device_dev_disk1s4_fstype_apfs_mountpoint_private_var_vm	499963174912	1576905934
