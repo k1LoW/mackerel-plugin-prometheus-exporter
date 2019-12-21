@@ -14,7 +14,6 @@ Usage:
   mackerel-plugin-prometheus-exporter [flags]
 
 Flags:
-  -e, --exclude stringArray   Exclude metrics regexp
   -h, --help                  help for mackerel-plugin-prometheus-exporter
   -p, --prefix string         Metric key prefix (default "prom")
   -t, --target stringArray    Prometheus exporter endpoint
@@ -24,7 +23,7 @@ Flags:
 ## Example
 
 ``` console
-$ mackerel-plugin-prometheus-exporter --target=http://:9100/metrics --exclude=^go # scrape node_exporter
+$ mackerel-plugin-prometheus-exporter --target=http://:9100/metrics # scrape node_exporter
 [...]
 prom.node_filesystem_size_bytes.node_filesystem_size_bytes-device_dev_disk1s1_fstype_apfs_mountpoint	499963174912	1576905934
 prom.node_filesystem_size_bytes.node_filesystem_size_bytes-device_dev_disk1s4_fstype_apfs_mountpoint_private_var_vm	499963174912	1576905934

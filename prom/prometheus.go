@@ -34,7 +34,7 @@ type Plugin struct {
 }
 
 // NewPlugin returns Plugin
-func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefix string, excludes []string) (Plugin, error) {
+func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefix string) (Plugin, error) {
 	if prefix == "" {
 		prefix = DefaultPrefix
 	}
@@ -45,11 +45,6 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 		metrics: map[string]float64{},
 		prefix:  prefix,
 		client:  client,
-	}
-
-	eRegexps := []*regexp.Regexp{}
-	for _, e := range excludes {
-		eRegexps = append(eRegexps, regexp.MustCompile(e))
 	}
 
 	mutex := new(sync.Mutex)
@@ -70,7 +65,7 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 			parser := textparse.NewPromParser(buf.Bytes())
 
 			var res labels.Labels
-		L:
+
 			for {
 				et, err := parser.Next()
 				if err != nil {
@@ -86,14 +81,6 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 					parser.Metric(&res)
 					key := res.Get(labels.MetricName)
 
-					if len(eRegexps) > 0 {
-						for _, re := range eRegexps {
-							if re.MatchString(key) {
-								res = res[:0]
-								continue L
-							}
-						}
-					}
 					b := labels.NewBuilder(res)
 					b.Del(labels.MetricName)
 
