@@ -19,6 +19,7 @@ archives:
   name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   format: zip
   files:
+    - LICENSE
     - CREDITS
     - README.md
     - CHANGELOG.md
@@ -28,6 +29,7 @@ archives:
   format_overrides:
     - goos: darwin
   files:
+    - LICENSE
     - CREDITS
     - README.md
     - CHANGELOG.md
