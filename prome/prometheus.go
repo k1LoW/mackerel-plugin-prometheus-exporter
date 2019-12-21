@@ -1,4 +1,4 @@
-package prom
+package prome
 
 import (
 	"bufio"
@@ -21,7 +21,7 @@ import (
 	"github.com/prometheus/prometheus/pkg/textparse"
 )
 
-const DefaultPrefix = "prom"
+const DefaultPrefix = "prome"
 
 var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]+`)
 

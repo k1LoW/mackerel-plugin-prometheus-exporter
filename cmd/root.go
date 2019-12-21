@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/prom"
+	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/prome"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/spf13/cobra"
 )
@@ -44,7 +44,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
-		p, err := prom.NewPlugin(ctx, prom.NewHTTPClient(), targets, prefix)
+		p, err := prome.NewPlugin(ctx, prome.NewHTTPClient(), targets, prefix)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
@@ -64,6 +64,6 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringArrayVarP(&targets, "target", "t", []string{}, "Prometheus exporter endpoint")
-	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prom.DefaultPrefix, "Metric key prefix")
+	rootCmd.Flags().StringVarP(&prefix, "prefix", "p", prome.DefaultPrefix, "Metric key prefix")
 	rootCmd.Flags().StringVarP(&tempfile, "tempfile", "", "", "Temp file name")
 }
