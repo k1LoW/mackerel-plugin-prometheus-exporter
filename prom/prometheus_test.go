@@ -22,9 +22,8 @@ test_more_metrics_bytes{role="a" } 256.0`
 	ts := newMockServer(in)
 	targets := []string{ts.URL}
 	prefix := ""
-	excludes := []string{}
 	ctx := context.Background()
-	p, err := NewPlugin(ctx, NewHTTPClient(), targets, prefix, excludes)
+	p, err := NewPlugin(ctx, NewHTTPClient(), targets, prefix)
 	if err != nil {
 		t.Fatal(err)
 	}
