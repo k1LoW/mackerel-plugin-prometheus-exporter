@@ -60,6 +60,7 @@ prom.node_memory_wired_bytes.node_memory_wired_bytes	2934050816	1576905934
 - [ ] Support config.yml ( `-c, --config` )
 - [ ] `--target` endpoint query string ( like `--target=http://:9100/metrics?role=app&hostname=app-1.internal`) to label
 - [ ] Default http.Client setting
+- [ ] Service discovery
 - [ ] Auto update metrics graph definition
 
 ## Alternatives
