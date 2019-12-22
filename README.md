@@ -4,7 +4,22 @@ Mackerel plugin for reading Prometheus exporter metrics.
 
 ![Architecture](architecture.png)
 
+## Install
+
+``` console
+$ mkr plugin install k1LoW/mackerel-plugin-prometheus-exporter[@<release_tag>]
+```
+
 ## Usage
+
+### Setting
+
+``` toml
+[plugin.metrics.prometheus-exporter]
+command = ["/path/to/mackerel-plugin-prometheus-exporter", "--target", "http://:9100/metrics", "--target", "http://:9197/metrics"]
+```
+
+### Command
 
 ``` console
 $ mackerel-plugin-prometheus-exporter -h
@@ -21,12 +36,6 @@ Flags:
 ```
 
 ## Example
-
-``` toml
-[plugin.metrics.prometheus-exporter]
-command = "mackerel-plugin-prometheus-exporter --target=http://:9100/metrics --target=http://:9197/metrics"
-exclude_pattern = "^go_"
-```
 
 ``` console
 $ mackerel-plugin-prometheus-exporter --target=http://:9100/metrics --target=http://:9197/metrics # scrape exporters
