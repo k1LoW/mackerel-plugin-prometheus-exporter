@@ -11,6 +11,14 @@ builds:
     - linux
     - darwin
     - windows
+  goarch:
+    - "386"
+    - amd64
+    - arm
+    - arm64
+  goarm:
+    - "6"
+    - "7"
   ldflags:
     - -s -w -X github.com/k1LoW/mackerel-plugin-prometheus-exporter.version={{.Version}} -X github.com/k1LoW/mackerel-plugin-prometheus-exporter.commit={{.FullCommit}} -X github.com/k1LoW/mackerel-plugin-prometheus-exporter.date={{.Date}} -X github.com/k1LoW/mackerel-plugin-prometheus-exporter/version.Version={{.Version}}
 archives:
