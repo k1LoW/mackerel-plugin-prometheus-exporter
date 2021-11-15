@@ -21,7 +21,10 @@ import (
 	"github.com/prometheus/prometheus/pkg/textparse"
 )
 
-const DefaultPrefix = "prome"
+const (
+	DefaultPrefix = "prome"
+	maxCopySize   = 1073741824 //1GB
+)
 
 var denyRe = regexp.MustCompile(`[^-a-zA-Z0-9_]+`)
 
@@ -193,7 +196,14 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 		return "", err
 	}
 
-	_, err = io.Copy(w, gzipr)
+	size, err := io.CopyN(w, gzipr, maxCopySize)
+	if !errors.Is(err, io.EOF) {
+		return "", err
+	}
+	if size >= maxCopySize {
+		return "", fmt.Errorf("too large file size to copy: %d >= %d", size, maxCopySize)
+	}
+
 	_ = gzipr.Close()
 	if err != nil {
 		return "", err
