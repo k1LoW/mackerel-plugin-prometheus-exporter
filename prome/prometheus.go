@@ -205,8 +205,5 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 	}
 
 	_ = gzipr.Close()
-	if err != nil {
-		return "", err
-	}
 	return resp.Header.Get("Content-Type"), nil
 }
