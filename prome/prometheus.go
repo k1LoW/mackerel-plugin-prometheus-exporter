@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -52,7 +53,7 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 
 	mutex := new(sync.Mutex)
 	wg := &sync.WaitGroup{}
-	errChan := make(chan error, len(targets)) // TODO: output log
+	errChan := make(chan error, len(targets))
 
 	for _, t := range targets {
 		wg.Add(1)
@@ -133,6 +134,10 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 		}(t)
 	}
 	wg.Wait()
+	close(errChan)
+	for err := range errChan {
+		log.Println("Warn:", err)
+	}
 
 	return p, nil
 }
