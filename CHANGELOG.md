@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.3.1](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/compare/v0.3.0...v0.3.1) (2022-02-09)
+
+* Fix CI [#6](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/6) ([k1LoW](https://github.com/k1LoW))
+* Output error information in NewPlugin() [#5](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/5) ([dekokun](https://github.com/dekokun))
+
 ## [v0.3.0](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/compare/v0.2.0...v0.3.0) (2022-02-05)
 
 * Update pkgs [#4](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/4) ([k1LoW](https://github.com/k1LoW))
