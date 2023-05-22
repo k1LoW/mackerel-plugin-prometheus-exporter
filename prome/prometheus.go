@@ -18,8 +18,8 @@ import (
 	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/version"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/pkg/errors"
-	"github.com/prometheus/prometheus/pkg/labels"
-	"github.com/prometheus/prometheus/pkg/textparse"
+	"github.com/prometheus/prometheus/model/labels"
+	"github.com/prometheus/prometheus/model/textparse"
 )
 
 const (
