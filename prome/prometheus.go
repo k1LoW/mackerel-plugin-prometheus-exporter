@@ -158,7 +158,7 @@ func (p Plugin) MetricKeyPrefix() string {
 	return p.prefix
 }
 
-const acceptHeader = `application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1`
+const acceptHeader = `application/openmetrics-text;version=1.0.0,application/openmetrics-text;version=0.0.1;q=0.75,text/plain;version=0.0.4;q=0.5,*/*;q=0.1`
 
 var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus-exporter/%s", version.Version)
 var timeout = time.Duration(10 * time.Second)
