@@ -206,7 +206,7 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 	}
 
 	size, err := io.CopyN(w, gzipr, maxCopySize)
-	if !errors.Is(err, io.EOF) {
+	if err != nil && !errors.Is(err, io.EOF) {
 		return "", err
 	}
 	if size >= maxCopySize {
