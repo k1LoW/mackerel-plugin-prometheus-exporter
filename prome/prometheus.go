@@ -60,13 +60,17 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 		go func(t string) {
 			defer wg.Done()
 			var buf = new(bytes.Buffer)
-			_, err := p.scrape(ctx, t, buf)
+			contentType, err := p.scrape(ctx, t, buf)
 			if err != nil {
 				errChan <- fmt.Errorf("scrape failed: %s", err)
 				return
 			}
 
-			parser := textparse.NewPromParser(buf.Bytes())
+			parser, err := textparse.New(buf.Bytes(), contentType)
+			if err != nil {
+				errChan <- fmt.Errorf("parser failed: %s", err)
+				return
+			}
 
 			var res labels.Labels
 
