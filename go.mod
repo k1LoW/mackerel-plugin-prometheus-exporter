@@ -1,6 +1,6 @@
 module github.com/k1LoW/mackerel-plugin-prometheus-exporter
 
-go 1.17
+go 1.20
 
 require (
 	github.com/mackerelio/go-mackerel-plugin v0.1.4
