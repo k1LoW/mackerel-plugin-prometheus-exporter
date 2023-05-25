@@ -4,4 +4,4 @@ package version
 const Name string = "mackerel-plugin-prometheus-exporter"
 
 // Version for this
-var Version = "dev"
+var Version = "0.3.1"
