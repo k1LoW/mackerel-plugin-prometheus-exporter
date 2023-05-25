@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.4.0](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/compare/v0.3.1...v0.4.0) - 2023-05-25
+- Support OpenMetrics format by @matsuu in https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/7
+- Update pkgs by @k1LoW in https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/8
+- Setup tagpr by @k1LoW in https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/9
+
 ## [v0.3.1](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/compare/v0.3.0...v0.3.1) (2022-02-09)
 
 * Fix CI [#6](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/pull/6) ([k1LoW](https://github.com/k1LoW))
@@ -19,4 +24,3 @@
 
 
 ## [v0.1.0](https://github.com/k1LoW/mackerel-plugin-prometheus-exporter/compare/2e6d3e444608...v0.1.0) (2019-12-21)
-
