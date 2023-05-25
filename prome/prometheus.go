@@ -18,8 +18,8 @@ import (
 	"github.com/k1LoW/mackerel-plugin-prometheus-exporter/version"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/pkg/errors"
-	"github.com/prometheus/prometheus/pkg/labels"
-	"github.com/prometheus/prometheus/pkg/textparse"
+	"github.com/prometheus/prometheus/model/labels"
+	"github.com/prometheus/prometheus/model/textparse"
 )
 
 const (
@@ -60,13 +60,17 @@ func NewPlugin(ctx context.Context, client *http.Client, targets []string, prefi
 		go func(t string) {
 			defer wg.Done()
 			var buf = new(bytes.Buffer)
-			_, err := p.scrape(ctx, t, buf)
+			contentType, err := p.scrape(ctx, t, buf)
 			if err != nil {
 				errChan <- fmt.Errorf("scrape failed: %s", err)
 				return
 			}
 
-			parser := textparse.NewPromParser(buf.Bytes())
+			parser, err := textparse.New(buf.Bytes(), contentType)
+			if err != nil {
+				errChan <- fmt.Errorf("parser failed: %s", err)
+				return
+			}
 
 			var res labels.Labels
 
@@ -154,7 +158,7 @@ func (p Plugin) MetricKeyPrefix() string {
 	return p.prefix
 }
 
-const acceptHeader = `application/openmetrics-text; version=0.0.1,text/plain;version=0.0.4;q=0.5,*/*;q=0.1`
+const acceptHeader = `application/openmetrics-text;version=1.0.0,application/openmetrics-text;version=0.0.1;q=0.75,text/plain;version=0.0.4;q=0.5,*/*;q=0.1`
 
 var userAgentHeader = fmt.Sprintf("mackerel-plugin-prometheus-exporter/%s", version.Version)
 var timeout = time.Duration(10 * time.Second)
@@ -202,7 +206,7 @@ func (p Plugin) scrape(ctx context.Context, url string, w io.Writer) (string, er
 	}
 
 	size, err := io.CopyN(w, gzipr, maxCopySize)
-	if !errors.Is(err, io.EOF) {
+	if err != nil && !errors.Is(err, io.EOF) {
 		return "", err
 	}
 	if size >= maxCopySize {
