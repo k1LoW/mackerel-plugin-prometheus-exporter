@@ -25,22 +25,27 @@ archives:
 -
   id: mackerel-plugin-prometheus-exporter-release
   name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-  format: zip
+  format_overrides:
+    - goos: darwin
+      format: zip
   files:
     - LICENSE
     - CREDITS
     - README.md
     - CHANGELOG.md
+  rlcp: true
 -
   id: mackerel-plugin-prometheus-exporter-archive
   name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   format_overrides:
     - goos: darwin
+      format: zip
   files:
     - LICENSE
     - CREDITS
     - README.md
     - CHANGELOG.md
+  rlcp: true
 checksum:
   name_template: 'checksums.txt'
 snapshot:
